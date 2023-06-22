@@ -1,0 +1,25 @@
+.trading {
+    padding: 20px;
+}
+
+.account-filter {
+    margin-bottom: 20px;
+}
+
+.accordion ::ng-deep .card {
+    overflow: unset;
+}
+
+.account-filter .input {
+    padding: 5px 10px;
+}
+
+.place-order {
+    margin-right: 25px;
+}
+
+.trading-tabs {
+    margin: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+}

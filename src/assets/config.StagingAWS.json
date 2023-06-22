@@ -1,0 +1,15 @@
+{
+    "apiUrl": "https://staginginsti.algomerchant.com/nim",
+    "guacUrl": "https://staginginsti.algomerchant.com/guac",
+    "serverApiKey": "49oS83ErTEvH2lkj",
+    "firebase": {
+        "apiKey": "AIzaSyBtx7XuVwM04e3FpKu4Z-dR8gmhUlp4LL4",
+        "authDomain": "nim-autoinvest-staging.firebaseapp.com",
+        "databaseURL": "https://nim-autoinvest-staging-default-rtdb.asia-southeast1.firebasedatabase.app",
+        "projectId": "nim-autoinvest-staging",
+        "storageBucket": "nim-autoinvest-staging.appspot.com",
+        "messagingSenderId": "396438841427",
+        "appId": "1:396438841427:web:d88cc6a02600b0d7df3ea6",
+        "measurementId": "G-CCPEBCSJ0S"
+    }
+}

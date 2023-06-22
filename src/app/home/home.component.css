@@ -1,0 +1,50 @@
+.am-home {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+}
+
+.logo {
+    margin-top: 30px;
+}
+
+.logo img {
+    height: 50px;
+}
+
+.login-box {
+    width: 400px;
+    border: 1px solid #e3ebf6;
+    background-color: #e3ebf6;
+    border-radius: 5px;
+    padding: 0 20px;
+    margin: 50px 0;
+}
+
+.login {
+    text-align: center;
+    margin: 50px 0 0 0;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.login-form {
+    margin: 20px auto;
+    max-width: 500px;
+}
+
+.login-form .btn {
+    margin-top: 20px;
+}
+
+.forget {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.recovery {
+    color: #0056b3;
+    text-decoration: underline;
+    cursor: pointer;
+}

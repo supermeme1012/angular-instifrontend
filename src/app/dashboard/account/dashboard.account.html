@@ -1,0 +1,134 @@
+<div class="account">
+    <div class="account-filter card">
+        <div class="card-header">
+            <span class="title">&#10070; <b>Filter</b></span>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <h6>Model Portfolio:</h6>
+                    <div ngbDropdown>
+                        <button class="btn btn-outline-primary" id="select-account" ngbDropdownToggle>
+                            {{ accountService.selectedModelPortfolio.ModelPortfolio }}
+                        </button>
+                        <div ngbDropdownMenu aria-labelledby="select-account">
+                            <button ngbDropdownItem *ngFor="let modelPortfolio of modelPortfolios$ | async"
+                                on-click="setModelPortfolio(modelPortfolio)">
+                                {{ modelPortfolio.ModelPortfolio }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <h6>Broker:</h6>
+                    <div ngbDropdown>
+                        <button class="btn btn-outline-primary" ngbDropdownToggle>
+                            {{ accountService.selectedBroker }}
+                        </button>
+                        <div ngbDropdownMenu>
+                            <button ngbDropdownItem *ngFor="let broker of brokers" on-click="setBroker(broker)">
+                                {{ broker }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <h6>Keyword:</h6>
+                    <input class="form-control" type="text" placeholder="Search clients..." name="searchTerm"
+                        [(ngModel)]="accountService.searchTerm" />
+                </div>
+                <div class="col-md-3">
+                    <h6>Connection Status:</h6>
+                    <div ngbDropdown>
+                        <button class="btn btn-outline-primary" ngbDropdownToggle>
+                            {{ accountService.selectedStatus }}
+                        </button>
+                        <div ngbDropdownMenu>
+                            <button ngbDropdownItem on-click="setStatus('All')">All</button>
+                            <button ngbDropdownItem on-click="setStatus('Ready')">Ready</button>
+                            <button ngbDropdownItem on-click="setStatus('Not Ready')">Not Ready</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="client-list card">
+        <div class="card-header">
+            <span class="title">&#9776; <b>Client List</b></span>
+            <button class="btn btn-primary configure-vm" (click)="accessVM()"
+                *ngIf="accountService.selectedModelPortfolio.AccountType !== 'Individual'">
+                Configure VM
+            </button>
+            <button class="btn btn-primary add-client" (click)="addClient()">Add Client</button>
+        </div>
+        <div class="card-body">
+            <div class="ml-3" *ngIf="accountService.loading$ | async">Loading...</div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col" sortable="Name" (sort)="onSort($event)">Name</th>
+                        <th scope="col" sortable="AccountNumber" (sort)="onSort($event)">Account No</th>
+                        <th scope="col">Account Type</th>
+                        <th scope="col" sortable="Email" (sort)="onSort($event)">Email</th>
+                        <th scope="col" sortable="PhoneNumber" (sort)="onSort($event)">Phone</th>
+                        <th scope="col">Status</th>
+                        <th scope="col" *ngIf="accountService.selectedModelPortfolio.AccountType === 'Individual'"></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let client of clientList">
+                        <td>
+                            <ngb-highlight [result]="client.Name" [term]="accountService.searchTerm"></ngb-highlight>
+                        </td>
+                        <td>
+                            <ngb-highlight [result]="client.AccountNumber" [term]="accountService.searchTerm">
+                            </ngb-highlight>
+                        </td>
+                        <td>
+                            <ngb-highlight [result]="client.AccountType" [term]="accountService.searchTerm">
+                            </ngb-highlight>
+                        </td>
+                        <td>
+                            <ngb-highlight [result]="client.Email" [term]="accountService.searchTerm"></ngb-highlight>
+                        </td>
+
+                        <td>
+                            <ngb-highlight [result]="client.PhoneNumber" [term]="accountService.searchTerm">
+                            </ngb-highlight>
+                        </td>
+                        <td>
+                            <span class="badge"
+                                [ngClass]="{'badge-success': client.Status=='Ready', 'badge-danger': client.Status=='Not Ready'}">
+                                {{client.Status}}
+                            </span>
+                        </td>
+                        <td *ngIf="accountService.selectedModelPortfolio.AccountType === 'Individual'">
+                            <button type="button" class="btn btn-primary btn-sm" (click)="accessIndividualVM(client.UserId)">
+                                Configure VM
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger btn-sm" (click)="removeClient(client)">
+                                Remove
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="d-flex justify-content-between p-2">
+                <ngb-pagination [collectionSize]="(accountService.total$ | async)!" [(page)]="accountService.page"
+                    [pageSize]="accountService.pageSize">
+                </ngb-pagination>
+
+                <select class="custom-select" style="width: auto" name="pageSize" [(ngModel)]="accountService.pageSize">
+                    <option [ngValue]="5">5 items per page</option>
+                    <option [ngValue]="10">10 items per page</option>
+                    <option [ngValue]="20">20 items per page</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,21 @@
+.overview {
+    padding: 10px;
+}
+
+.overview .alert-warning {
+    margin-top: 20px;
+}
+
+.account-summary {
+    max-width: 300px;
+    margin: 10px auto;
+    padding: 10px;
+    border: 1px #85bdf7 solid;
+    border-radius: 5px;
+}
+
+.allocation-table {
+    max-width: 600px;
+    margin: auto;
+    margin-top: 20px;
+}

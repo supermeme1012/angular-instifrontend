@@ -1,0 +1,44 @@
+.home-reset{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+}
+
+.logo {
+    margin-top: 30px;
+}
+
+.logo img {
+    height: 50px;
+}
+
+.reset-box {
+    width: 400px;
+    border: 1px solid #e3ebf6;
+    background-color: #e3ebf6;
+    border-radius: 5px;
+    padding: 0 20px;
+    margin: 50px 0;
+}
+
+.reset {
+    text-align: center;
+    margin: 40px auto;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.reset-form {
+    margin: 20px auto;
+    max-width: 500px;
+}
+
+.reset-form .btn {
+    margin-top: 20px;
+}
+
+.login {
+    text-align: center;
+    margin-top: 20px;
+}

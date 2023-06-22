@@ -1,0 +1,35 @@
+/* Application-wide Styles */
+body {
+    background-color: #002348;
+}
+
+.red-loss {
+    color: #ff1f3d;
+}
+
+.green-profit {
+    color: #1f7860;
+}
+
+.loading {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+    text-align: center;
+    background-color: white;
+    margin: 20px auto;
+}
+
+.loading img {
+    top: 50%;
+    left: 50%;
+    margin-left: -10px;
+    width: 50px;
+    height: 50px;
+}
+
+.loading .loading-text {
+    font-size: 22px;
+}

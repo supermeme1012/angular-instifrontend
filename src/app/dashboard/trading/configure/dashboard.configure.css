@@ -1,0 +1,78 @@
+.simple, .advanced {
+    padding-top: 10px;
+}
+
+.bg-success {
+    color: #fff;
+    cursor: pointer;
+    background-color: #019f96 !important;
+    margin-left: 5px;
+}
+
+.slidecontainer {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.form-group label {
+    margin-right: 5px;
+}
+
+.equation {
+    background: #eaedf3;
+    border-radius: 10px;
+    padding: 30px 15px;
+}
+
+.callout.callout-success {
+    border-left-color: #1e7e34;
+}
+
+.callout {
+    border-radius: .25rem;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 12%), 0 1px 2px rgb(0 0 0 / 24%);
+    background-color: #fff;
+    border-left: 5px solid #e9ecef;
+    margin-bottom: 1rem;
+    padding: 1rem;
+}
+
+.loading-product {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+    text-align: center;
+    background-color: white;
+}
+
+.loading-product img {
+    top: 50%;
+    left: 50%;
+    margin-left: -10px;
+    margin-top: 10px;
+    width: 30px;
+    height: 30px;
+}
+
+.product-list {
+    border: 1px solid #83bcf9;
+}
+
+.product-list .product-item {
+    border-bottom: 1px solid #cdcdd0;
+    padding: 2px 5px;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+}
+
+.product-list .product-item:hover {
+    background-color: #83bcf9;
+}
+
+.disabled {
+    opacity: 0.6;
+    pointer-events: none;
+}

@@ -1,0 +1,67 @@
+<div class="signals">
+    <div *ngIf="selectedAccount.AccountNumber == 'All'">
+        <div class="alert alert-warning text-center">
+            This view is not available for all / aggregate account selection
+        </div>
+    </div>
+    <div *ngIf="selectedAccount.AccountNumber != 'All'">
+        <input class="form-control search-product" type="text" placeholder="Search..." name="searchTerm"
+            [(ngModel)]="service.searchTerm" />
+        <div class="ml-3" *ngIf="service.loading$ | async">Loading...</div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col" sortablesignal="Symbol" (sortsignal)="onSort($event)">Product</th>
+                    <th scope="col" sortablesignal="Action" (sortsignal)="onSort($event)">Action</th>
+                    <th scope="col" sortablesignal="Allocation" (sortsignal)="onSort($event)">Allocation%</th>
+                    <th scope="col" sortablesignal="Intention" (sortsignal)="onSort($event)">Intention</th>
+                    <th scope="col" sortablesignal="Mode" (sortsignal)="onSort($event)">Execution Plan</th>
+                    <th scope="col" sortablesignal="Status" (sortsignal)="onSort($event)">Status</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let signal of service.signals$ | async">
+                    <td>
+                        <ngb-highlight [result]="signal.Symbol" [term]="service.searchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                        <ngb-highlight [result]="signal.Action" [term]="service.searchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                        {{ signal.Allocation * 100 | number : '1.2-2' }}%
+                    </td>
+                    <td>
+                        <ngb-highlight [result]="signal.Intention" [term]="service.searchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                        <ngb-highlight [result]="signal.Mode" [term]="service.searchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                        <ngb-highlight [result]="signal.Status" [term]="service.searchTerm"></ngb-highlight>
+                    </td>
+                    <td *ngIf="autoInvestStatus == 'off'">
+                        <span *ngIf="signal.Status == 'Manual Mode'">
+                            <button class="btn btn-danger" (click)="follow(signal)" style="margin-right: 5px;">Follow</button>
+                        </span>
+                        <span>
+                            <button class="btn btn-danger" (click)="cancel(signal)">X</button>
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="d-flex justify-content-between p-2">
+            <ngb-pagination [collectionSize]="(service.total$ | async)!" [(page)]="service.page"
+                [pageSize]="service.pageSize">
+            </ngb-pagination>
+
+            <select class="custom-select" style="width: auto" name="pageSize" [(ngModel)]="service.pageSize">
+                <option [ngValue]="5">5 items per page</option>
+                <option [ngValue]="10">10 items per page</option>
+                <option [ngValue]="20">20 items per page</option>
+            </select>
+        </div>
+    </div>
+</div>

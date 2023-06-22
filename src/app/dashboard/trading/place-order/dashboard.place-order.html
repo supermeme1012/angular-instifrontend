@@ -1,0 +1,209 @@
+<div class="modal-header">
+    <h4 class="modal-title" id="modal-title">Place Order for {{account.AccountNumber}}</h4>
+    <button type="button" class="close" aria-label="Close button" aria-describedby="modal-title"
+        (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div *ngIf="!showConfirm">
+        <div class="row">
+            <div class="col-md-6">
+                <form role="form">
+                    <div class="card-body order-form">
+                        <div class="form-group">
+                            <label for="action">Action</label>
+                            <div ngbDropdown class="d-inline-block">
+                                <button class="btn btn-outline-primary" id="select-account" ngbDropdownToggle>
+                                    {{selectedAction}}
+                                </button>
+                                <div ngbDropdownMenu aria-labelledby="select-account">
+                                    <button ngbDropdownItem (click)="setAction('Buy')">Buy</button>
+                                    <button ngbDropdownItem (click)="setAction('Sell')">Sell</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="product-input">Product</label>
+                            <input type="text" class="form-control" id="product-input" placeholder="Search Product..." [formControl]="productSearch">
+                            <div class="loading-product" *ngIf="loadingProduct">
+                                <img src="//am708403.azureedge.net/images/static/loading.gif?" />
+                                <div class="loading-text">Searching products...</div>
+                            </div>
+                            <div class="product-list" *ngIf="productList.length > 0">
+                                <div class="product-item" *ngFor="let product of productList"
+                                    (click)="selectProduct(product)">
+                                    {{product.Symbol}} | {{product.ProductName}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="quantity">Quantity</label>
+                            <input type="number" class="form-control" id="quantity" placeholder=""
+                                [formControl]="quantity">
+                        </div>
+                        <div class="form-group">
+                            <label for="action">Order Type</label>
+                            <div ngbDropdown class="d-inline-block">
+                                <button class="btn btn-outline-primary" id="select-account" ngbDropdownToggle>
+                                    {{orderType}}
+                                </button>
+                                <div ngbDropdownMenu aria-labelledby="select-account">
+                                    <button ngbDropdownItem (click)="setOrderType('Limit')">Limit</button>
+                                    <button ngbDropdownItem (click)="setOrderType('Market')">Market</button>
+                                    <button ngbDropdownItem (click)="setOrderType('Stop')">Stop</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" *ngIf="orderType !== 'Market'">
+                            <label for="price">Price</label>
+                            <input type="number" class="form-control" id="price" placeholder=""
+                                [formControl]="orderPrice">
+                        </div>
+                        <div class="form-group">
+                            <label for="action">Validity</label>
+                            <div ngbDropdown class="d-inline-block">
+                                <button class="btn btn-outline-primary" id="select-account" ngbDropdownToggle>
+                                    {{orderValidity}}
+                                </button>
+                                <div ngbDropdownMenu aria-labelledby="select-account">
+                                    <button ngbDropdownItem (click)="setOrderValidity('Day')">Day</button>
+                                    <button ngbDropdownItem (click)="setOrderValidity('GTC')">GTC</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-6">
+                <div class="guide" *ngIf="selectedProduct && selectedProduct.ProductId == 0">
+                    <p>
+                        Instructions:
+                    </p>
+                    <p>
+                        1. Search for a product to trade
+                    </p>
+                    <p>
+                        2. Fill in all fields required
+                    </p>
+                    <p>
+                        3. Click 'Place Order' button
+                    </p>
+                </div>
+                <div *ngIf="selectedProduct && selectedProduct.ProductId > 0">
+                    <p>
+                        {{selectedProduct.Symbol}} | {{selectedProduct.ProductName}}
+                    </p>
+                    <p *ngIf="selectedProduct.Last && selectedProduct.Last > 0">
+                        Last Traded Price: {{selectedProduct.Currency}} {{selectedProduct.Last | number : '1.2-2'}}
+                    </p>
+                    <div class="row" *ngIf="selectedProduct.Bid && selectedProduct.Bid > 0 && selectedProduct.Ask && selectedProduct.Ask > 0">
+                        <div class="col-md-6">
+                            <div class="info-box bg-gradient-success">
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Bid</span>
+                                    <span class="info-box-text">{{selectedProduct.Currency}} {{selectedProduct.Bid | number : '1.2-2'}}</span>
+                                    <span class="info-box-text">VOL: {{selectedProduct.BidVol}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-box bg-gradient-danger">
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Ask</span>
+                                    <span class="info-box-text">{{selectedProduct.Currency}}  {{selectedProduct.Ask | number : '1.2-2'}}</span>
+                                    <span class="info-box-text">VOL: {{selectedProduct.AskVol}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p *ngIf="tradeAmount > 0 && orderType !== 'Market'">
+                        Trade Amount: {{selectedProduct.Currency}} {{tradeAmount | number : '1.2-2'}}
+                    </p>
+                    <div class="current-position" *ngIf="false">
+                        <label>Your Current Open Position For {{selectedProduct.Symbol}}</label>
+                        <table class="table table-bordered table-striped">
+                            <tbody>
+                                <tr>
+                                    <td>Position</td>
+                                    <td>short</td>
+                                </tr>
+                                <tr>
+                                    <td>Quantity</td>
+                                    <td>662</td>
+                                </tr>
+                                <tr>
+                                    <td>Entry Price</td>
+                                    <td>USD 123.30</td>
+                                </tr>
+                                <tr>
+                                    <td>Unrealized</td>
+                                    <td><span class="text-green">USD 345.88</span></td>
+                                </tr>
+                                <tr>
+                                    <td>P/L</td>
+                                    <td> <span class="text-red">50.29%</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="showConfirm">
+        <p>This order will be created and the request will be submitted to your broker immediately.
+            <span class="text-danger">This operation can not be undone.</span>
+        </p>
+        <table class="table table-striped table-bordered">
+            <tbody>
+                <tr>
+                    <td>Account Number</td>
+                    <td>{{account.AccountNumber}}</td>
+                </tr>
+                <tr>
+                    <td>Action</td>
+                    <td>
+                        <span [ngClass]="{'green-profit': selectedAction=='Buy', 'red-loss': selectedAction=='Sell'}"
+                            class="green-profit">
+                            {{selectedAction}}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Product</td>
+                    <td>{{selectedProduct.ProductName}} ({{selectedProduct.Symbol}})</td>
+                </tr>
+                <tr>
+                    <td>Quantity</td>
+                    <td>{{quantity.value}} Units</td>
+                </tr>
+                <tr>
+                    <td>Order Type</td>
+                    <td>{{orderType}}</td>
+                </tr>
+                <tr *ngIf="orderType !== 'Market'">
+                    <td>Price</td>
+                    <td>
+                        {{selectedProduct.Currency}} {{orderPrice.value | number : '1.2-2'}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Validity</td>
+                    <td>{{orderValidity}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal-footer">
+    <div *ngIf="!showConfirm">
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('cancel click')">Cancel</button>
+        <button type="button" class="btn btn-danger" (click)="goToConfirm()">Place Order</button>
+    </div>
+    <div *ngIf="showConfirm">
+        <button type="button" class="btn btn-outline-secondary" (click)="goBack()">Go Back</button>
+        <button type="button" class="btn btn-danger" (click)="confirmOrder()">Confirm</button>
+    </div>
+</div>

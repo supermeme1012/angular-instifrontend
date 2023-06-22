@@ -1,0 +1,44 @@
+<div class="setup-2fa">
+    <h4>Enable 2FA</h4>
+    <div *ngIf="displayAuthenticator">
+        <p>Scan the QR Code or enter the following key into your two factor authenticator app. Spaces and casing do not
+            matter</p>
+        <div class="authenticatorKey">{{authenticatorDetails.SharedKey}}</div>
+        <div class="genQrCode">
+            <qrcode [qrdata]="authenticatorDetails.AuthenticatorUri" [width]="256" [errorCorrectionLevel]="'M'"></qrcode>
+        </div>
+        <div style="margin-bottom: 10px">
+            Once you have scanned the QR code or input the key above, your two factor authentication app will provide
+            you with a unique code. Enter the code in the confirmation box below
+            <input class="form-control" (keydown)="onKeydown($event)" name="verificationCode" id="verificationCode"
+                [(ngModel)]="verificationCode" type="text" placeholder="6-digit verification code"
+                style="margin: 10px auto; width:300px;" />
+            <button type="button" (click)="verifyAuthenticator()" class="btn btn-primary">Verify</button>
+        </div>
+        
+        <div class="form-group" *ngIf="errors.length > 0">
+            <ul [innerHTML]="errors" class="error"></ul>
+        </div>
+        <!--
+        <div class="form-group">
+            <label class="checkbox-inline">
+                <input type="checkbox" name="displayValidVerificationCodes"
+                    (ngModelChange)="toggleValidVerificationCodes($event)"
+                    [(ngModel)]="displayValidVerificationCodes">Show possible verification codes
+            </label>
+        </div>
+        <div class="" *ngIf="displayValidVerificationCodes && validVerificationCodes.length > 0">
+            <h5>Valid 6-digit verification codes</h5>
+            <span (click)="verificationCode = validVerificationCode" class="validVerificationCode"
+                *ngFor="let validVerificationCode of validVerificationCodes">{{validVerificationCode}}</span>
+        </div>
+        -->
+    </div>
+    <div class="recoveryCodes" *ngIf="recoveryCodes.length > 0">
+        <h5>Copy and save your recovery codes</h5>
+        <ul>
+            <li *ngFor="let recoveryCode of recoveryCodes">{{recoveryCode}}</li>
+        </ul>
+        <button type="button" (click)="openDashboard()" class="btn btn-primary" style="margin-top: 10px">Back to Dashboard</button>
+    </div>
+</div>

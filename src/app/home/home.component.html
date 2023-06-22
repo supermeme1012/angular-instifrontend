@@ -1,0 +1,43 @@
+<div class="am-home">
+  <div class="logo">
+    <img src="//am708403.azureedge.net/images/am-insti/am-insti.png?" alt="">
+  </div>
+  <div class="login-box">
+    <div class="login">Log In</div>
+    <div class="login-form" *ngIf="!showTwofa">
+      <div class="form-group">
+        <label for="email">Email address</label>
+        <input type="email" class="form-control" id="email" placeholder="Email" [formControl]="email">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" class="form-control" id="password" placeholder="Password" [formControl]="password">
+      </div>
+      <div class="text-center">
+        <button class="btn btn-primary" (click)="submit()">Submit</button>
+      </div>
+      <div class="forget">
+        <a href="/reset">Forgot your password? Click here to reset</a>
+      </div>
+    </div>
+    <div class="login-form" *ngIf="showTwofa">
+      <div class="form-group" *ngIf="!showRecovery">
+        <label>Please enter 6-digit verification code on your mobile authenticator device:</label>
+        <input type="text" class="form-control" placeholder="" [formControl]="twofa">
+        <div class="text-center">
+          <button class="btn btn-primary" (click)="verifyTwofa()">Verify</button>
+        </div>
+        <div class="forget">
+          <a class="recovery" (click)="goToRecovery()">Lost your mobile? Click here to login with recovery code</a>
+        </div>
+      </div>
+      <div class="form-group" *ngIf="showRecovery">
+        <label>Please enter recovery code:</label>
+        <input type="text" class="form-control" placeholder="" [formControl]="recoveryCode">
+        <div class="text-center">
+          <button class="btn btn-primary" (click)="loginWithRecovery()">Login</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

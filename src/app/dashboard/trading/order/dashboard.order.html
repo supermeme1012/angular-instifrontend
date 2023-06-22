@@ -1,0 +1,66 @@
+<div class="orders">
+    <div *ngIf="selectedAccount.AccountNumber == 'All'">
+        <div class="alert alert-warning text-center">
+            This view is not available for all / aggregate account selection
+        </div>
+    </div>
+    <div *ngIf="selectedAccount.AccountNumber != 'All'">
+        <input class="form-control search-product" type="text" placeholder="Search..." name="searchTerm"
+            [(ngModel)]="service.searchTerm" />
+        <div class="ml-3" *ngIf="service.loading$ | async">Loading...</div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col" sortableorder="Symbol" (sortorder)="onSort($event)">Product</th>
+                    <th scope="col" sortableorder="Direction" (sortorder)="onSort($event)">Direction</th>
+                    <th scope="col" sortableorder="OrderPrice" (sortorder)="onSort($event)">Order Price</th>
+                    <th scope="col" sortableorder="Quantity" (sortorder)="onSort($event)">Quantity</th>
+                    <th scope="col" sortableorder="Type" (sortorder)="onSort($event)">Order Type</th>
+                    <th scope="col" sortableorder="Validity" (sortorder)="onSort($event)">Validity</th>
+                    <th scope="col" sortableorder="Status" (sortorder)="onSort($event)">Order Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let order of service.orders$ | async">
+                    <td>
+                        <ngb-highlight [result]="order.Symbol" [term]="service.searchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                        <ngb-highlight [result]="order.Direction" [term]="service.searchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                        {{order.Currency}} {{order.OrderPrice | number : '1.2-2'}}
+                    </td>
+                    <td>
+                        {{order.Quantity}}
+                    </td>
+                    <td>
+                        <ngb-highlight [result]="order.Type" [term]="service.searchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                        <ngb-highlight [result]="order.Validity" [term]="service.searchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                        {{order.Status}}
+                    </td>
+                    <td>
+                        <button class="btn btn-danger" (click)="cancel(order)">Cancel</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="d-flex justify-content-between p-2">
+            <ngb-pagination [collectionSize]="(service.total$ | async)!" [(page)]="service.page"
+                [pageSize]="service.pageSize">
+            </ngb-pagination>
+
+            <select class="custom-select" style="width: auto" name="pageSize" [(ngModel)]="service.pageSize">
+                <option [ngValue]="5">5 items per page</option>
+                <option [ngValue]="10">10 items per page</option>
+                <option [ngValue]="20">20 items per page</option>
+            </select>
+        </div>
+    </div>
+</div>

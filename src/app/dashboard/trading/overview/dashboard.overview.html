@@ -1,0 +1,85 @@
+<div class="overview">
+    <div *ngIf="selectedAccount.AccountNumber == 'All'">
+        <div class="alert alert-warning text-center">
+            This view is not available for all / aggregate account selection
+        </div>
+    </div>
+    <div *ngIf="selectedAccount.AccountNumber != 'All' && brokerAccount.AccountNumber != ''">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-4 text-center">
+                <h5 class="account-summary">
+                    Equity: {{brokerAccount.Equity | number : '1.2-2'}}
+                </h5>
+            </div>
+            <div class="col-md-4 text-center">
+                <h5 class="account-summary">
+                    Currency: {{brokerAccount.Currency}}
+                </h5>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="allocation-table">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col" class="green-profit">LONG</th>
+                        <th scope="col" class="red-loss">SHORT</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Allocation</td>
+                        <td>{{longAllocationPct * brokerAccount.Equity | number : '1.2-2'}} ({{longAllocationPct * 100 | number : '1.2-2'}}%)</td>
+                        <td>{{shortAllocationPct * brokerAccount.Equity | number : '1.2-2'}} ({{shortAllocationPct * 100 | number : '1.2-2'}}%)</td>
+                    </tr>
+                    <tr>
+                        <td>Exposure</td>
+                        <td>{{longExposure | number : '1.2-2'}} ({{longExposure / brokerAccount.Equity * 100 | number : '1.2-2'}}%)</td>
+                        <td>{{shortExposure | number : '1.2-2'}} ({{shortExposure / brokerAccount.Equity * 100 | number : '1.2-2'}}%)</td>
+                    </tr>
+                    <tr>
+                        <td>Allocation Limit</td>
+                        <td>{{brokerAccount.Equity * brokerAccount.MaxLongAlloc / 100 | number : '1.2-2'}} ({{brokerAccount.MaxLongAlloc | number : '1.2-2'}}%)</td>
+                        <td>{{brokerAccount.Equity * brokerAccount.MaxShortAlloc / 100 | number : '1.2-2'}} ({{brokerAccount.MaxShortAlloc | number : '1.2-2'}}%)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <ngb-accordion #acc="ngbAccordion">
+            <ngb-panel>
+                <ng-template ngbPanelTitle>
+                    <span>&#9759;<b>Broker’s raw information</b></span>
+                </ng-template>
+                <ng-template ngbPanelContent>
+                    <div class="row">
+                        <div class="card cc-6 col-md-6 mx-auto">
+                            <div class="card-header">
+                                <h5 class="card-title">Information from Interactive Brokers:</h5>
+                            </div>
+                            <div class="card-body p-0">
+                                <table class="table table-striped">
+                                    <tbody>
+                                        <tr>
+                                            <td>Fund</td>
+                                            <td>{{brokerAccount.Currency}} {{brokerAccount.Fund | number : '1.2-2'}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Available to deal:</td>
+                                            <td>{{brokerAccount.Currency}} {{brokerAccount.Available | number : '1.2-2'}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Margin:</td>
+                                            <td>{{brokerAccount.Currency}} {{brokerAccount.Margin | number : '1.2-2'}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </ngb-panel>
+        </ngb-accordion>
+    </div>
+</div>

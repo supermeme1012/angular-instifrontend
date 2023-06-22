@@ -1,0 +1,59 @@
+<div class="modal-header">
+    <h4 class="modal-title" id="modal-title">Add Client</h4>
+    <button type="button" class="close" aria-label="Close button" aria-describedby="modal-title"
+        (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="add-client">
+        <form role="form">
+            <div class="card-body">
+                <div class="form-group">
+                    <label>Model Portfolio: </label>
+                    <div ngbDropdown>
+                        <button class="btn btn-outline-primary" id="select-account" ngbDropdownToggle>
+                            {{ selectedModelPortfolio.ModelPortfolio }}
+                        </button>
+                        <div ngbDropdownMenu aria-labelledby="select-account">
+                            <button ngbDropdownItem *ngFor="let modelPortfolio of modelPortfolios"
+                                on-click="selectedModelPortfolio=modelPortfolio">
+                                {{ modelPortfolio.ModelPortfolio }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Name:</label>
+                    <input type="text" class="form-control" placeholder="Enter name..." [formControl]="name">
+                </div>
+                <div class="form-group">
+                    <label>Email Address:</label>
+                    <input type="email" class="form-control" placeholder="Enter email..." [formControl]="email">
+                </div>
+                <div class="form-group">
+                    <label>Phone: </label>
+                    <input type="tel" class="form-control" placeholder="Enter phone..." [formControl]="phone">
+                </div>
+                <div class="form-group">
+                    <label>Broker:</label>
+                    <div ngbDropdown>
+                        <button class="btn btn-outline-primary" ngbDropdownToggle>
+                            {{selectedBroker}}
+                        </button>
+                        <div ngbDropdownMenu>
+                            <button ngbDropdownItem *ngFor="let broker of brokers"
+                                on-click="selectedBroker=broker">
+                                {{ broker }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('cancel click')">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="confirm()">Confirm</button>
+</div>

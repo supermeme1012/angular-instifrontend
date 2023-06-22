@@ -1,0 +1,57 @@
+<div class="am-profile">
+    <div class="header">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="am-logo" (click)="openDashboard()">
+                    <img src="//am708403.azureedge.net/images/am-insti/am-insti.png?" alt="">
+                </div>
+                <div class="insti-logo"><img src="//am708403.blob.core.windows.net/images/partners/nim.png?" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="profile-tabs">
+        <ul ngbNav #nav="ngbNav" class="nav-tabs">
+            <li ngbNavItem>
+                <a ngbNavLink>Security</a>
+                <ng-template ngbNavContent>
+                    <div class="security">
+                        <div class="loading" *ngIf="isLoading">
+                            <img src="//am708403.azureedge.net/images/static/loading.gif?" />
+                            <div class="loading-text">Loading...</div>
+                        </div>
+                        <div *ngIf="!isLoading && twofaEnabled">
+                            <h4>Your account is already enabled 2FA</h4>
+                            <div>
+                                <button type="button" (click)="openDashboard()" class="btn btn-primary"
+                                    style="margin:10px 0;">Back to Dashboard</button>
+                            </div>
+                            <div>
+                                <button type="button" (click)="generateRecoveryCodes()" class="btn btn-primary"
+                                    style="margin:10px 0;">Generate Recovery Code</button>
+                            </div>
+                            <div class="recoveryCodes" *ngIf="recoveryCodes.length > 0">
+                                <h5>Copy and save your recovery codes</h5>
+                                <ul>
+                                    <li *ngFor="let recoveryCode of recoveryCodes">{{recoveryCode}}</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <button type="button" (click)="disable2fa()" class="btn btn-primary"
+                                    style="margin:10px 0;">Disable 2FA</button>
+                            </div>
+                            <div>
+                                <button type="button" (click)="resetAuthenticator()" class="btn btn-primary"
+                                    style="margin:10px 0;">Reset Authenticator</button>
+                            </div>
+                        </div>
+                        <div *ngIf="!isLoading && !twofaEnabled">
+                            <app-profile-setup2fa></app-profile-setup2fa>
+                        </div>
+                    </div>
+                </ng-template>
+            </li>
+        </ul>
+        <div [ngbNavOutlet]="nav"></div>
+    </div>
+</div>

@@ -1,0 +1,129 @@
+<div class="trading">
+    <div class="account-filter card">
+        <div class="card-header">
+            <span class="title">&#10070; <b>Filter</b></span>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <h6>Model Portfolio:</h6>
+                    <div ngbDropdown>
+                        <button class="btn btn-outline-primary" id="select-account" ngbDropdownToggle>
+                            {{ tradingService.selectedModelPortfolio.ModelPortfolio }}
+                        </button>
+                        <div ngbDropdownMenu aria-labelledby="select-account">
+                            <button ngbDropdownItem *ngFor="let modelPortfolio of modelPortfolios$ | async"
+                                on-click="setModelPortfolio(modelPortfolio)">
+                                {{ modelPortfolio.ModelPortfolio }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <h6>Broker:</h6>
+                    <div ngbDropdown>
+                        <button class="btn btn-outline-primary" ngbDropdownToggle>
+                            {{ tradingService.selectedBroker }}
+                        </button>
+                        <div ngbDropdownMenu>
+                            <button ngbDropdownItem *ngFor="let broker of brokers" on-click="setBroker(broker)">
+                                {{ broker }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <h6>Account:</h6>
+                    <div ngbDropdown *ngIf="accountList && accountList.length == 1">
+                        <button class="btn btn-outline-primary" ngbDropdownToggle>
+                            {{tradingService.selectedAccountNumber}}<span *ngIf="tradingService.selectedAccountNumber != 'All'"> - {{tradingService.selectedAccount.Name}}</span>
+                        </button>
+                    </div>
+                    <div ngbDropdown *ngIf="accountList && accountList.length > 1">
+                        <button class="btn btn-outline-primary" ngbDropdownToggle>
+                            {{tradingService.selectedAccountNumber}}<span *ngIf="tradingService.selectedAccountNumber != 'All'"> - {{tradingService.selectedAccount.Name}}</span>
+                        </button>
+                        <div ngbDropdownMenu>
+                            <button ngbDropdownItem on-click="setAccount(tradingService.selectedAccount, true)">
+                                All
+                            </button>
+                            <button ngbDropdownItem *ngFor="let account of accountList"
+                                on-click="setAccount(account, false)">
+                                {{ account.AccountNumber }} - {{ account.Name }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div>
+                        <button class="btn btn-primary" (click)="configure()">Configure Money Management</button>
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <button class="btn btn-primary place-order" (click)="placeOrder()">Place Order</button>
+                        <button class="btn btn-danger" (click)="liquidate()">Liquidate All</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer text-center" *ngIf="tradingService.selectedAccount.AccountNumber !== 'All'">
+            AutoInvest Status
+            <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic">
+                <label ngbButtonLabel
+                    [ngClass]="{'btn-outline-secondary': autoInvestStatus=='on', 'btn-danger': autoInvestStatus=='off'}">
+                    <input ngbButton type="radio" value="off" (click)="toggleAutoInvest('off')">Off
+                </label>
+                <label ngbButtonLabel
+                    [ngClass]="{'btn-outline-secondary': autoInvestStatus=='off', 'btn-success': autoInvestStatus=='on'}">
+                    <input ngbButton type="radio" value="on" (click)="toggleAutoInvest('on')">On
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="loading" *ngIf="loading">
+        <img src="//am708403.azureedge.net/images/static/loading.gif?" />
+        <div class="loading-text">Loading...</div>
+    </div>
+    <div class="trading-tabs" *ngIf="!loading">
+        <ul ngbNav #nav="ngbNav" class="nav-tabs">
+            <li ngbNavItem (click)="refreshFirebaseData()">
+                <a ngbNavLink>Account Summary</a>
+                <ng-template ngbNavContent>
+                    <dashboard-overview [selectedAccount]="tradingService.selectedAccount" [exchangeRate]="exchangeRate"></dashboard-overview>
+                </ng-template>
+            </li>
+            <li ngbNavItem (click)="refreshFirebaseData()">
+                <a ngbNavLink>Signals</a>
+                <ng-template ngbNavContent>
+                    <dashboard-signal [selectedAccount]="tradingService.selectedAccount" [autoInvestStatus]="autoInvestStatus">
+                    </dashboard-signal>
+                </ng-template>
+            </li>
+            <li ngbNavItem (click)="refreshFirebaseData()">
+                <a ngbNavLink>Active Positions</a>
+                <ng-template ngbNavContent>
+                    <dashboard-position [selectedAccount]="tradingService.selectedAccount" [modelPortfolio]="tradingService.selectedModelPortfolio">
+                    </dashboard-position>
+                </ng-template>
+            </li>
+            <li ngbNavItem (click)="refreshFirebaseData()">
+                <a ngbNavLink>Active Orders</a>
+                <ng-template ngbNavContent>
+                    <dashboard-order [selectedAccount]="tradingService.selectedAccount"></dashboard-order>
+                </ng-template>
+            </li>
+            <li ngbNavItem (click)="refreshFirebaseData()">
+                <a ngbNavLink>Historical Transactions</a>
+                <ng-template ngbNavContent>
+                    <dashboard-historical [selectedAccount]="tradingService.selectedAccount"></dashboard-historical>
+                </ng-template>
+            </li>
+            <li ngbNavItem (click)="refreshFirebaseData()">
+                <a ngbNavLink>Historical Positions</a>
+                <ng-template ngbNavContent>
+                    <dashboard-historical-pos [selectedAccount]="tradingService.selectedAccount" [modelPortfolio]="tradingService.selectedModelPortfolio"></dashboard-historical-pos>
+                </ng-template>
+            </li>
+        </ul>
+        <div [ngbNavOutlet]="nav"></div>
+    </div>
+</div>

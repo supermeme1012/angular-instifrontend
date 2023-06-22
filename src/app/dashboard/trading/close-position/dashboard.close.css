@@ -1,0 +1,40 @@
+.close-form label {
+    margin-right: 5px;
+}
+
+.modal-footer .btn-danger {
+    margin-left: 10px;
+}
+
+.info-box {
+    box-shadow: 0 0 1px rgb(0 0 0 / 13%), 0 1px 3px rgb(0 0 0 / 20%);
+    border-radius: .25rem;
+    background: #d7e0ea;
+    display: -ms-flexbox;
+    display: flex;
+    margin-bottom: 1rem;
+    padding: .5rem;
+    position: relative;
+}
+
+.info-box .info-box-content {
+    -ms-flex: 1;
+    flex: 1;
+    padding: 5px 10px;
+}
+
+.product-symbol {
+    font-size: 20px;
+}
+
+.info-box .info-box-text {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.info-box .info-box-number {
+    display: block;
+    font-weight: 700;
+}

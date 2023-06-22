@@ -1,0 +1,51 @@
+.header{
+    width: 100%;
+    font-size: 25px;
+    padding: 2px 15px;
+    color: #002348;
+    min-height: 50px;
+    background: #fff;
+}
+
+.header .am-logo{
+    float: left;
+    padding-top: 2px;
+    cursor: pointer;
+}
+
+.header .am-logo img{
+    height: 40px;
+}
+
+.header .insti-logo{
+    float: left;
+}
+
+.header .insti-logo img{
+    height: 40px;
+}
+
+.header .welcome {
+    padding-top: 5px;
+    font-size: 18px;
+}
+
+.header .welcome .btn-primary {
+    margin-left: 5px;
+}
+
+.dashboard-tabs {
+    margin: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+}
+
+.dashboard-tabs .nav-link {
+    font-weight: bold;
+}
+
+.am-dashboard .settings {
+    width: 30px;
+    margin: 0 15px;
+    cursor: pointer;
+}

@@ -1,0 +1,69 @@
+<div class="historical">
+    <div *ngIf="selectedAccount.AccountNumber == 'All'">
+        <div class="alert alert-warning text-center">
+            This view is not available for all / aggregate account selection
+        </div>
+    </div>
+    <div *ngIf="selectedAccount.AccountNumber != 'All'">
+        <input class="form-control search-product" type="text" placeholder="Search..." name="searchTerm"
+            [(ngModel)]="service.searchTerm" />
+        <div class="ml-3" *ngIf="service.loading$ | async">Loading...</div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col" sortablehistoricalpos="Product" (sorthistoricalpos)="onSort($event)">Product</th>
+                    <th scope="col" sortablehistoricalpos="Position" (sorthistoricalpos)="onSort($event)">Position</th>
+                    <th scope="col" sortablehistoricalpos="Quantity" (sorthistoricalpos)="onSort($event)">Quantity</th>
+                    <th scope="col" sortablehistoricalpos="AverageEntryPrice" (sorthistoricalpos)="onSort($event)">Avg Entry Price</th>
+                    <th scope="col" sortablehistoricalpos="AverageExitPrice" (sorthistoricalpos)="onSort($event)">Avg Exit Price</th>
+                    <th scope="col" sortablehistoricalpos="RealizedPL" (sorthistoricalpos)="onSort($event)">Realized P/L</th>
+                    <th scope="col" sortablehistoricalpos="NetPL" (sorthistoricalpos)="onSort($event)">Net P/L</th>
+                    <th scope="col" sortablehistoricalpos="EnterDate" (sorthistoricalpos)="onSort($event)">Entry Time</th>
+                    <th scope="col" sortablehistoricalpos="ExitDate" (sorthistoricalpos)="onSort($event)">Exit Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let historical of service.historicals$ | async">
+                    <td>
+                        <ngb-highlight [result]="historical.Product.Symbol" [term]="service.searchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                        <ngb-highlight [result]="historical.Position" [term]="service.searchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                        {{historical.Quantity}}
+                    </td>
+                    <td>
+                        {{historical.Product.Currency}} {{historical.AverageEntryPrice | number : '1.2-2'}}
+                    </td>
+                    <td>
+                        {{historical.Product.Currency}} {{historical.AverageExitPrice | number : '1.2-2'}}
+                    </td>
+                    <td [ngClass]="{'green-profit': historical.RealizedPL >= 0, 'red-loss': historical.RealizedPL < 0}">
+                        {{historical.Product.Currency}} {{historical.RealizedPL | number : '1.2-2'}}
+                    </td>
+                    <td [ngClass]="{'green-profit': historical.NetPL >= 0, 'red-loss': historical.NetPL < 0}">
+                        {{historical.Product.Currency}} {{historical.NetPL | number : '1.2-2'}}
+                    </td>
+                    <td>
+                        {{historical.EnterDate | date:'medium'}}
+                    </td>
+                    <td>
+                        {{historical.ExitDate | date:'medium'}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="d-flex justify-content-between p-2">
+            <ngb-pagination [collectionSize]="(service.total$ | async)!" [(page)]="service.page" [pageSize]="service.pageSize">
+            </ngb-pagination>
+
+            <select class="custom-select" style="width: auto" name="pageSize" [(ngModel)]="service.pageSize">
+                <option [ngValue]="5">5 items per page</option>
+                <option [ngValue]="10">10 items per page</option>
+                <option [ngValue]="20">20 items per page</option>
+            </select>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,57 @@
+<div class="historical">
+    <div *ngIf="selectedAccount.AccountNumber == 'All'">
+        <div class="alert alert-warning text-center">
+            This view is not available for all / aggregate account selection
+        </div>
+    </div>
+    <div *ngIf="selectedAccount.AccountNumber != 'All'">
+        <input class="form-control search-product" type="text" placeholder="Search..." name="searchTerm"
+            [(ngModel)]="service.searchTerm" />
+        <div class="ml-3" *ngIf="service.loading$ | async">Loading...</div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col" sortablehistorical="Symbol" (sorthistorical)="onSort($event)">Product</th>
+                    <th scope="col" sortablehistorical="Direction" (sorthistorical)="onSort($event)">Direction</th>
+                    <th scope="col" sortablehistorical="FillPrice" (sorthistorical)="onSort($event)">Fill Price</th>
+                    <th scope="col" sortablehistorical="Source" (sorthistorical)="onSort($event)">Source</th>
+                    <th scope="col" sortablehistorical="Intention" (sorthistorical)="onSort($event)">Intention</th>
+                    <th scope="col" sortablehistorical="Date" (sorthistorical)="onSort($event)">Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let historical of service.historicals$ | async">
+                    <td>
+                        <ngb-highlight [result]="historical.Symbol" [term]="service.searchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                        <ngb-highlight [result]="historical.Direction" [term]="service.searchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                        {{historical.Currency}} {{historical.FillPrice | number : '1.2-2'}}
+                    </td>
+                    <td>
+                        {{historical.Source}}
+                    </td>
+                    <td>
+                        {{historical.Intention}}
+                    </td>
+                    <td>
+                        {{historical.Date | date:'medium'}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="d-flex justify-content-between p-2">
+            <ngb-pagination [collectionSize]="(service.total$ | async)!" [(page)]="service.page" [pageSize]="service.pageSize">
+            </ngb-pagination>
+
+            <select class="custom-select" style="width: auto" name="pageSize" [(ngModel)]="service.pageSize">
+                <option [ngValue]="5">5 items per page</option>
+                <option [ngValue]="10">10 items per page</option>
+                <option [ngValue]="20">20 items per page</option>
+            </select>
+        </div>
+    </div>
+</div>

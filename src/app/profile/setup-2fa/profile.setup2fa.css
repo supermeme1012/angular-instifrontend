@@ -1,0 +1,26 @@
+.genQrCode {
+    margin: 20px auto;
+    padding: 20px;
+    text-align: center;
+    background: #ffffff;
+}
+
+.authenticatorKey {
+    text-align: center;
+    font-size: 20px;
+    color: #8a6d3b;
+}
+
+.validVerificationCode {
+    margin-right: 5px;
+    color: #3884FE;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.error {
+    margin: 10px auto;
+    color: red;
+    text-decoration: underline;
+    font-size: 20px;
+}

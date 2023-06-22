@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "nim-autoinvest-staging": {
+      "hosting": {
+        "am-insti": [
+          "nim-autoinvest-staging"
+        ]
+      }
+    }
+  }
+}

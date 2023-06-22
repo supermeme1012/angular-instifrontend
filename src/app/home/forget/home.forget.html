@@ -1,0 +1,20 @@
+<div class="home-reset">
+    <div class="logo">
+        <img src="//am708403.azureedge.net/images/am-insti/am-insti.png?" alt="">
+    </div>
+    <div class="reset-box">
+        <div class="reset">Reset Password</div>
+        <div class="reset-form">
+            <div class="form-group">
+                <label for="email">Email address</label>
+                <input type="email" class="form-control" id="email" placeholder="Email" [formControl]="email">
+            </div>
+            <div class="text-center">
+                <button class="btn btn-primary" (click)="submit()">Request new password</button>
+            </div>
+            <div class="login">
+                <a href="/home">Login here</a>
+            </div>
+        </div>
+    </div>
+</div>

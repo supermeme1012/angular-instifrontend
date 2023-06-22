@@ -1,0 +1,131 @@
+<div class="modal-header">
+    <h4 class="modal-title" id="modal-title">Close Position</h4>
+    <button type="button" class="close" aria-label="Close button" aria-describedby="modal-title"
+        (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="close-position">
+        <form role="form" *ngIf="!showConfirm">
+            <div class="card-body close-form">
+                <div class="form-group">
+                    <label for="action">Action</label>
+                    <div ngbDropdown class="d-inline-block">
+                        <button class="btn btn-outline-primary" id="select-account" ngbDropdownToggle>
+                            {{selectedAction}}
+                        </button>
+                        <div ngbDropdownMenu aria-labelledby="select-account">
+                            <button ngbDropdownItem (click)="setAction('Buy')">Buy</button>
+                            <button ngbDropdownItem (click)="setAction('Sell')">Sell</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <div class="info-box">
+                        <div class="info-box-content ">
+                            <div class="product-text">
+                                <div class="product-symbol ellipsis-nowrap">{{this.productName}} ({{this.symbol}})</div>
+                                <!--<div class="product-name ellipsis-nowrap">Open: US$ 123.23</div>-->
+                            </div>
+                            <!--
+                            <span class="info-box-number">Bid: US$ 123.23 | Ask: US$ 123.23</span>
+                            <span class="info-box-number">High: US$ 123.23 | Low: US$ 123.23</span>
+                            -->
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Quantity</label>
+                    <input type="number" class="form-control" id="quantity" placeholder="" [formControl]="quantityForm">
+                </div>
+                <div class="form-group">
+                    <label for="action">Order Type</label>
+                    <div ngbDropdown class="d-inline-block">
+                        <button class="btn btn-outline-primary" id="select-account" ngbDropdownToggle>
+                            {{orderType}}
+                        </button>
+                        <div ngbDropdownMenu aria-labelledby="select-account">
+                            <button ngbDropdownItem (click)="setOrderType('Limit')">Limit</button>
+                            <button ngbDropdownItem (click)="setOrderType('Market')">Market</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" *ngIf="orderType !== 'Market'">
+                    <label for="price">Price</label>
+                    <input type="number" class="form-control" id="price" placeholder="" [formControl]="orderPrice">
+                </div>
+                <div class="form-group">
+                    <label for="action">Validity</label>
+                    <div ngbDropdown class="d-inline-block">
+                        <button class="btn btn-outline-primary" id="select-account" ngbDropdownToggle>
+                            {{orderValidity}}
+                        </button>
+                        <div ngbDropdownMenu aria-labelledby="select-account">
+                            <button ngbDropdownItem (click)="setOrderValidity('Day')">Day</button>
+                            <button ngbDropdownItem (click)="setOrderValidity('GTC')">GTC</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group  "><small>Please note that order may not be executed immediately until a matching
+                        price is found / before market open. you may review these orders under Active Orders tab.</small>
+                </div>
+            </div>
+        </form>
+
+        <div *ngIf="showConfirm">
+            <p>This order will be created and the request will be submitted to your broker immediately.
+                <span class="text-danger">This operation can not be undone.</span>
+            </p>
+            <table class="table table-striped table-bordered">
+                <tbody>
+                    <tr>
+                        <td>Account Number</td>
+                        <td>{{account.AccountNumber}}</td>
+                    </tr>
+                    <tr>
+                        <td>Action</td>
+                        <td>
+                            <span [ngClass]="{'green-profit': selectedAction=='Buy', 'red-loss': selectedAction=='Sell'}"
+                                class="green-profit">
+                                {{selectedAction}}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Product</td>
+                        <td>{{this.productName}} ({{this.symbol}})</td>
+                    </tr>
+                    <tr>
+                        <td>Quantity</td>
+                        <td>{{quantity.value}} Units</td>
+                    </tr>
+                    <tr>
+                        <td>Order Type</td>
+                        <td>{{orderType}}</td>
+                    </tr>
+                    <tr *ngIf="orderType !== 'Market'">
+                        <td>Price</td>
+                        <td>
+                            {{this.currency}} {{orderPrice.value | number : '1.2-2'}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Validity</td>
+                        <td>{{orderValidity}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div *ngIf="!showConfirm">
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('cancel click')">Cancel</button>
+        <button type="button" class="btn btn-danger" (click)="goToConfirm()">Place Order</button>
+    </div>
+    <div *ngIf="showConfirm">
+        <button type="button" class="btn btn-outline-secondary" (click)="goBack()">Go Back</button>
+        <button type="button" class="btn btn-danger" (click)="confirmOrder()">Confirm</button>
+    </div>
+</div>

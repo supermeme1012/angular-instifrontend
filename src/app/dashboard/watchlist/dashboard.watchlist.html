@@ -1,0 +1,79 @@
+<div class="watchlist">
+    <input class="form-control search-product" type="text" placeholder="Search Products..." name="searchTerm"
+        [(ngModel)]="service.searchTerm" />
+    <div class="loading" *ngIf="service.loading$ | async">
+        <img src="//am708403.azureedge.net/images/static/loading.gif?" />
+        <div class="loading-text">Loading...</div>
+    </div>
+    <div *ngIf="!(service.loading$ | async)">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col" sortablewatchlist="Name" (sortwatchlist)="onSort($event)">Product</th>
+                    <th scope="col" sortablewatchlist="BidPrice" (sortwatchlist)="onSort($event)">Bid</th>
+                    <th scope="col" sortablewatchlist="AskPrice" (sortwatchlist)="onSort($event)">Ask</th>
+                    <th scope="col" sortablewatchlist="BidSize" (sortwatchlist)="onSort($event)">Bid Vol</th>
+                    <th scope="col" sortablewatchlist="AskSize" (sortwatchlist)="onSort($event)">Ask Vol</th>
+                    <th scope="col" sortablewatchlist="LastTradedPrice" (sortwatchlist)="onSort($event)">Last</th>
+                    <th scope="col" sortablewatchlist="PrevClose" (sortwatchlist)="onSort($event)">Last Close</th>
+                    <th scope="col" sortablewatchlist="TodayOpen" (sortwatchlist)="onSort($event)">Today Open</th>
+                    <th scope="col" sortablewatchlist="PctChange" (sortwatchlist)="onSort($event)">Change</th>
+                    <th scope="col" sortablewatchlist="CumulativeVolume" (sortwatchlist)="onSort($event)">Volume</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let product of products" style="font-weight: 500;">
+                    <td>
+                        <div class="product-icon">
+                            <img src="{{product.ProductIconURL}}" />
+                        </div>
+                        <div class="product-text">
+                            <ngb-highlight [result]="product.Name" [term]="service.searchTerm"></ngb-highlight>
+                            <br />
+                            <ngb-highlight [result]="product.Symbol" [term]="service.searchTerm"></ngb-highlight>
+                        </div>
+                    </td>
+                    <td>
+                        {{product.Currency}} {{product.BidPrice | number : '1.2-2'}}
+                    </td>
+                    <td>
+                        {{product.Currency}} {{product.AskPrice | number : '1.2-2'}}
+                    </td>
+                    <td>
+                        {{product.BidSize}}
+                    </td>
+                    <td>
+                        {{product.AskSize}}
+                    </td>
+                    <td>
+                        {{product.Currency}} {{product.LastTradedPrice | number : '1.2-2'}}
+                    </td>
+                    <td>
+                        {{product.Currency}} {{product.PrevClose | number : '1.2-2'}}
+                    </td>
+                    <td>
+                        {{product.Currency}} {{product.TodayOpen | number : '1.2-2'}}
+                    </td>
+                    <td [ngClass]="{'green-profit': product.Change >= 0, 'red-loss': product.Change < 0}">
+                        <div>{{product.Currency}} {{product.Change | number : '1.2-2'}}</div>
+                        <div>({{product.PctChange *100 | number : '1.2-2'}}%)</div>
+                    </td>
+                    <td>
+                        {{product.CumulativeVolume}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="d-flex justify-content-between p-2">
+            <ngb-pagination [collectionSize]="(total$ | async)!" [(page)]="service.page" [pageSize]="service.pageSize">
+            </ngb-pagination>
+
+            <select class="custom-select" style="width: auto" name="pageSize" [(ngModel)]="service.pageSize">
+                <option [ngValue]="30">30 items per page</option>
+                <option [ngValue]="50">50 items per page</option>
+                <option [ngValue]="100">100 items per page</option>
+            </select>
+        </div>
+    </div>
+</div>

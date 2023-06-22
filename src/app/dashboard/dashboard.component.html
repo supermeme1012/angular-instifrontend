@@ -1,0 +1,40 @@
+<div class="am-dashboard">
+    <div class="header">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="am-logo" (click)="openDashboard()">
+                    <img src="//am708403.azureedge.net/images/am-insti/am-insti.png?" alt="">
+                </div>
+                <div class="insti-logo"><img src="//am708403.blob.core.windows.net/images/partners/nim.png?" alt=""></div>
+            </div>
+            <div class="col-md-6 text-right welcome">
+                Welcome {{userName}},
+                <img src="//am708403.azureedge.net/images/am-insti/settings.png?" alt="" class="settings" (click)="openProfile()">
+                <button class="btn btn-primary" (click)="logout()">Log Out</button>
+            </div>
+        </div>
+    </div>
+    <div class="dashboard-tabs">
+        <ul ngbNav #nav="ngbNav" class="nav-tabs">
+            <li ngbNavItem>
+                <a ngbNavLink>Account Management</a>
+                <ng-template ngbNavContent>
+                    <dashboard-account></dashboard-account>
+                </ng-template>
+            </li>
+            <li ngbNavItem>
+                <a ngbNavLink>Trading</a>
+                <ng-template ngbNavContent>
+                    <dashboard-trading></dashboard-trading>
+                </ng-template>
+            </li>
+            <li ngbNavItem>
+                <a ngbNavLink>Overview</a>
+                <ng-template ngbNavContent>
+                    <dashboard-watchlist></dashboard-watchlist>
+                </ng-template>
+            </li>
+        </ul>
+        <div [ngbNavOutlet]="nav"></div>
+    </div>
+</div>

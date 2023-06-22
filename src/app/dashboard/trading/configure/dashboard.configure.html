@@ -1,0 +1,443 @@
+<div class="modal-header">
+    <h4 class="modal-title" id="modal-title">Configure Money Management</h4>
+    <button type="button" class="close" aria-label="Close button" aria-describedby="modal-title"
+        (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="loading" *ngIf="loading">
+        <img src="//am708403.azureedge.net/images/static/loading.gif?" />
+        <div class="loading-text">Loading Config...</div>
+    </div>
+    <div *ngIf="account.AccountNumber == 'All'">
+        <div class="alert alert-danger text-center">
+            Warning: Below settings will be applied to ALL accounts!
+        </div>
+    </div>
+    <div class="configure" *ngIf="!loading">
+        <div class="trading-tabs">
+            <ul ngbNav #nav="ngbNav" class="nav-tabs">
+                <li ngbNavItem>
+                    <a ngbNavLink>Simple</a>
+                    <ng-template ngbNavContent>
+                        <div class="simple">
+                            <div class="row">
+                                <div
+                                    [ngClass]="{'col-md-8': account.AccountNumber=='All', 'col-md-6': account.AccountNumber!='All'}">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="select-template"
+                                            value="custom" [(ngModel)]="selectedTemplate"
+                                            [checked]="selectedTemplate=='custom'">
+                                        <label class="form-check-label">Use Custom Settings</label>
+                                    </div>
+                                    <br />
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="select-template"
+                                            value="default" [(ngModel)]="selectedTemplate"
+                                            [checked]="selectedTemplate=='default'" (ngModelChange)="applyDeafultSettings()">
+                                        <label class="form-check-label">Use Default Template</label>
+                                    </div>
+                                    <div class="form-group">
+                                        <select class="form-control">
+                                            <option>Confident (Default for Adaptive mode)</option>
+                                        </select>
+                                    </div>
+                                    <hr>
+                                    <div [ngClass]="{'disabled': selectedTemplate=='default'}">
+                                        <div class="slidecontainer">
+                                            <label>
+                                                Max Capital Allocation (%)
+                                                <i class="badge bg-success" placement="top"
+                                                    ngbTooltip="Maximum percentage of total account equity to be used">i</i>
+                                            </label>
+                                            <ngx-slider [(value)]="maxCapitalAlloc" [options]="maxCapitalAllocOptions">
+                                            </ngx-slider>
+                                        </div>
+                                        <div class="slidecontainer">
+                                            <label>
+                                                Max Long Portfolio Allocation (%)
+                                                <i class="badge bg-success" placement="top"
+                                                    ngbTooltip="Maximum percentage of total account equity to be used for long positions">i</i>
+                                            </label>
+                                            <ngx-slider [(value)]="maxLongAlloc" [options]="maxLongAllocOptions">
+                                            </ngx-slider>
+                                        </div>
+                                        <div class="slidecontainer">
+                                            <label>
+                                                Max Short Portfolio Allocation (%)
+                                                <i class="badge bg-success" placement="top"
+                                                    ngbTooltip="Maximum percentage of total account equity to be used for short positions">i</i>
+                                            </label>
+                                            <ngx-slider [(value)]="maxShortAlloc" [options]="maxShortAllocOptions">
+                                            </ngx-slider>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="action">
+                                                Sizing Mode
+                                                <i class="badge bg-success" placement="top"
+                                                    ngbTooltip="Select position sizing mode">i</i>
+                                            </label>
+                                            <div ngbDropdown class="d-inline-block">
+                                                <button class="btn btn-outline-primary" ngbDropdownToggle>
+                                                    {{selectedSizingMode}}
+                                                </button>
+                                                <div ngbDropdownMenu>
+                                                    <button ngbDropdownItem
+                                                        (click)="setSizingMode('Fixed')">Fixed</button>
+                                                    <button ngbDropdownItem
+                                                        (click)="setSizingMode('Adaptive')">Adaptive</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div *ngIf="selectedSizingMode == 'Fixed'">
+                                            <div class="slidecontainer">
+                                                <label>
+                                                    Long Allocation Per Trade (%)
+                                                    <i class="badge bg-success" placement="top"
+                                                        ngbTooltip="Percentage of total account equity to be used for each long trade">i</i>
+                                                </label>
+                                                <ngx-slider [(value)]="longAllocPerTrade"
+                                                    [options]="longAllocPerTradeOptions"></ngx-slider>
+                                            </div>
+                                            <div class="slidecontainer">
+                                                <label>
+                                                    Short Allocation Per Trade (%)
+                                                    <i class="badge bg-success" placement="top"
+                                                        ngbTooltip="Percentage of total account equity to be used for each short trade">i</i></label>
+                                                <ngx-slider [(value)]="shortAllocPerTrade"
+                                                    [options]="shortAllocPerTradeOptions"></ngx-slider>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="selectedSizingMode == 'Adaptive'">
+                                            <div class="slidecontainer">
+                                                <label>
+                                                    Max Long Allocation Per Trade (%)
+                                                    <i class="badge bg-success" placement="top"
+                                                        ngbTooltip="Maximum percentage of total account equity to be used for each long trade">i</i>
+                                                </label>
+                                                <ngx-slider [(value)]="maxLongAllocPerTrade"
+                                                    [options]="maxLongAllocPerTradeOptions"></ngx-slider>
+                                            </div>
+                                            <div class="slidecontainer">
+                                                <label>
+                                                    Max Short Allocation Per Trade (%)
+                                                    <i class="badge bg-success" placement="top"
+                                                        ngbTooltip="Maximum percentage of total account equity to be used for each short trade">i</i>
+                                                </label>
+                                                <ngx-slider [(value)]="maxShortAllocPerTrade"
+                                                    [options]="maxShortAllocPerTradeOptions"></ngx-slider>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="form-group"
+                                            *ngIf="brokerAccount.AccountType == '' || brokerAccount.AccountType.toLowerCase() != 'cash'">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox"
+                                                    [(ngModel)]="leverageEnabled" (ngModelChange)="evaluateLeverage()">
+                                                <label class="form-check-label">
+                                                    Enable Leverage
+                                                    <i class="badge bg-success" placement="top"
+                                                        ngbTooltip="Exposure over equity ratio">i</i>
+                                                </label>
+                                            </div>
+                                            <ngx-slider [(value)]="leverage" [options]="leverageOptions"></ngx-slider>
+                                        </div>
+                                    </div>
+                                    <div class="card mt-4">
+                                        <div class="card-body">
+                                            <h6>Risk Management</h6>
+                                            <div class="row">
+                                                <div class="col-sm-4">
+                                                    <div class="form-group mt-2">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                [(ngModel)]="stopLossEnabled">
+                                                            <label class="form-check-label">
+                                                                Stop Loss (%)
+                                                                <i class="badge bg-success" placement="top"
+                                                                    ngbTooltip="For each entry order, AutoInvest will place a corresponding Stop-Market order at this stop loss percentage away from the entry price, rounded to the nearest tick.">i</i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-8">
+                                                    <div ngbDropdown class="d-inline-block" disabled="!stopLossEnabled">
+                                                        <button class="btn btn-outline-primary" ngbDropdownToggle>
+                                                            {{stopLossPercent}}%
+                                                        </button>
+                                                        <div ngbDropdownMenu>
+                                                            <button ngbDropdownItem
+                                                                (click)="setStopLossPct(5)">5%</button>
+                                                            <button ngbDropdownItem
+                                                                (click)="setStopLossPct(10)">10%</button>
+                                                            <button ngbDropdownItem
+                                                                (click)="setStopLossPct(15)">15%</button>
+                                                            <button ngbDropdownItem
+                                                                (click)="setStopLossPct(20)">20%</button>
+                                                            <button ngbDropdownItem
+                                                                (click)="setStopLossPct(25)">25%</button>
+                                                            <button ngbDropdownItem
+                                                                (click)="setStopLossPct(30)">30%</button>
+                                                            <button ngbDropdownItem
+                                                                (click)="setStopLossPct(35)">35%</button>
+                                                            <button ngbDropdownItem
+                                                                (click)="setStopLossPct(40)">40%</button>
+                                                            <button ngbDropdownItem
+                                                                (click)="setStopLossPct(45)">45%</button>
+                                                            <button ngbDropdownItem
+                                                                (click)="setStopLossPct(50)">50%</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-sm-12 ">
+                                                    <h6>Execution Control</h6>
+                                                    <div class="form-group">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                [(ngModel)]="stopEntry">
+                                                            <label class="form-check-label"> Stop Entering New position
+                                                                (Only follow exits)</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" *ngIf="brokerAccount.Equity > 0">
+                                    <div class="equation">
+                                        <h6>Maximum exposure used by auto Invest</h6>
+                                        <div class="row">
+                                            <div class="col-sm-2" style="padding-right: 0;">
+                                                <b>{{leverage}}</b><br>
+                                                <small>Leverage<i class="badge bg-success" placement="top"
+                                                        ngbTooltip="Exposure over equity ratio">i</i></small>
+                                            </div>
+                                            <div class="col-sm-1">X</div>
+                                            <div class="col-sm-4">
+                                                <b>{{brokerAccount.Currency}} {{brokerAccount.Equity * maxCapitalAlloc /
+                                                    100 | number : '1.2-2'}}</b><br> <small>Equity</small>
+                                            </div>
+                                            <div class="col-sm-1">=</div>
+                                            <div class="col-sm-4"><b>{{brokerAccount.Currency}} {{leverage *
+                                                    brokerAccount.Equity * maxCapitalAlloc / 100 | number :
+                                                    '1.2-2'}}</b><br> <small>Maximum exposure</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+                <li ngbNavItem>
+                    <a ngbNavLink>Advanced</a>
+                    <ng-template ngbNavContent>
+                        <div class="advanced">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <h4>Signal Retry</h4>
+                                            <div class="form-group">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        [(ngModel)]="retryEnabled">
+                                                    <label class="form-check-label"> <strong> Retry Enter and Exit
+                                                            Signal on Next Available Opportunity</strong></label>
+                                                    <p></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4>Trade Execution Management</h4>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-md-12  ">
+                                                            <h4>Entry</h4>
+                                                            <div class="form-group">
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="radio1">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="entry-slippage" value="2"
+                                                                        [(ngModel)]="entrySlippageMode"
+                                                                        [checked]="entrySlippageMode=='2'">
+                                                                    <label class="form-check-label">Enter position using
+                                                                        limit Order if the price is within slippage
+                                                                        of</label>
+                                                                    <div class="input-group mb-3">
+                                                                        <input type="number" class="form-control"
+                                                                            [formControl]="entrySlippagePct">
+                                                                        <div class="input-group-append">
+                                                                            <span class="input-group-text">%</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="entry-slippage" value="1"
+                                                                        [(ngModel)]="entrySlippageMode"
+                                                                        [checked]="entrySlippageMode=='1'">
+                                                                    <label class="form-check-label">Enter position with
+                                                                        order type and price based on Algomerchant
+                                                                        Slippage</label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="entry-slippage" value="3"
+                                                                        [(ngModel)]="entrySlippageMode"
+                                                                        [checked]="entrySlippageMode=='3'">
+                                                                    <label class="form-check-label">Always enter using
+                                                                        Market Order</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 ">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <h4>Exit</h4>
+                                                            <div class="form-group">
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="exit-slippage" value="2"
+                                                                        [(ngModel)]="exitSlippageMode"
+                                                                        [checked]="exitSlippageMode=='2'">
+                                                                    <label class="form-check-label">Exit position using
+                                                                        limit Order if the price is within slippage
+                                                                        of</label>
+                                                                    <div class="input-group mb-3">
+                                                                        <input type="number" class="form-control"
+                                                                            [formControl]="exitSlippagePct">
+                                                                        <div class="input-group-append">
+                                                                            <span class="input-group-text">%</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="exit-slippage" value="1"
+                                                                        [(ngModel)]="exitSlippageMode"
+                                                                        [checked]="exitSlippageMode=='1'">
+                                                                    <label class="form-check-label">Exit position with
+                                                                        order type and price based on Algomerchant Smart
+                                                                        Slippage</label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="exit-slippage" value="3"
+                                                                        [(ngModel)]="exitSlippageMode"
+                                                                        [checked]="exitSlippageMode=='3'">
+                                                                    <label class="form-check-label">Always exit using
+                                                                        market Order</label>
+                                                                </div>
+                                                                <p class="mt-5">THESE SLIPPAGE CONFIGURATIONS DO NOT
+                                                                    APPLY TO ORDERS THAT ARE EXECUTED DUE TO YOUT
+                                                                    CONFIGURED STOP LOSS</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4>Products to exclude from trading</h4>
+                                    <p>ROBOT WILL NOT EXECUTE ANY ENTRY OR EXIT SIGNALS ON THE PRODUCTS BELOW</p>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="input-group">
+                                                                <input type="text" class="form-control"
+                                                                    placeholder="Search Product..."
+                                                                    [formControl]="productSearch">
+                                                            </div>
+                                                            <div class="loading-product" *ngIf="loadingProduct">
+                                                                <img
+                                                                    src="//am708403.azureedge.net/images/static/loading.gif?" />
+                                                                <div class="loading-text">Searching products...</div>
+                                                            </div>
+                                                            <div class="product-list" *ngIf="productList.length > 0">
+                                                                <div class="product-item"
+                                                                    *ngFor="let product of productList"
+                                                                    (click)="addBlacklistedProduct(product)">
+                                                                    {{product.Symbol}} | {{product.ProductName}}
+                                                                </div>
+                                                            </div>
+                                                            <h6 class="mt-3">Product List:</h6>
+                                                            <div *ngIf="blackListedProducts.length > 0">
+                                                                <div class="callout callout-success"
+                                                                    *ngFor="let product of blackListedProducts">
+                                                                    <div class="form-check">
+                                                                        <span class="form-check-label">
+                                                                            {{product.ProductName}} ({{product.Symbol}})
+                                                                        </span>
+                                                                        <button
+                                                                            class="btn btn-sm btn-danger float-right"
+                                                                            (click)="removeBlacklistedProduct(product)">
+                                                                            Remove
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                        <br />
+                                                        <br />
+                                                        <div class="col-md-12 mt-4"
+                                                            *ngIf="account.AccountNumber!='All'">
+                                                            <button type="button"
+                                                                class="m-t-30 btn btn-block btn-danger"
+                                                                (click)="excludeOpenPositions()">
+                                                                Exclude Products Which I currently hold
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+            </ul>
+            <div [ngbNavOutlet]="nav"></div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('cancel click')">Cancel</button>
+    <button type="button" class="btn btn-danger" (click)="save()">Save</button>
+</div>
